@@ -71,7 +71,7 @@ for package_path in reversed([p for p in rpp if p]):
             sys.path.insert(0, sys_path)
 import rosmsg  # noqa
 
-DEBUGGED_MSGS = ['ControllerState'] #'ODEJointProperties', 'UniqueID', 'OperationModeStatus']]
+DEBUGGED_MSGS = [] #'ODEJointProperties', 'UniqueID', 'OperationModeStatus', 'ControllerState']]
 
 def generate_cpp(output_path, template_dir):
     rospack = rospkg.RosPack()
@@ -293,6 +293,9 @@ def generate_messages(rospack=None):
 def generate_services(rospack=None, message_string_pairs=None):
     ros1_srvs = get_ros1_services(rospack=rospack)
     ros2_pkgs, ros2_srvs, mapping_rules = get_ros2_services()
+
+    print(mapping_rules)
+    
     services = determine_common_services(
         ros1_srvs, ros2_srvs, mapping_rules,
         message_string_pairs=message_string_pairs)
@@ -306,6 +309,8 @@ def generate_services(rospack=None, message_string_pairs=None):
 def generate_actions(rospack=None, message_string_pairs=None):
     ros1_actions = get_ros1_actions(rospack)
     ros2_pkgs, ros2_actions, mapping_rules = get_ros2_actions()
+
+    print(mapping_rules)
 
     actions = determine_common_actions(
         ros1_actions, ros2_actions, mapping_rules, message_string_pairs=message_string_pairs)
@@ -699,7 +704,7 @@ class ActionMappingRule(MappingRule):
                 'Mapping for package %s contains unknown field(s)' % self.ros2_package_name)
 
     def __str__(self):
-        return 'ActionMappingRule(%s, %s)' % (self.ros1_package_name, self.ros2_package_name)
+        return f'ActionMappingRule({self.ros1_package_name}, {self.ros2_package_name})\n - goal_fields_1_to_2: {self.goal_fields_1_to_2}\n - result_fields_1_to_2: {self.result_fields_1_to_2}\n - feedback_fields_1_to_2: {self.feedback_fields_1_to_2}'
 
 
 def determine_package_pairs(ros1_msgs, ros2_msgs, mapping_rules):
