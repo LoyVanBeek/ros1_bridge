@@ -262,6 +262,7 @@ def generate_messages(rospack=None):
     if mappings:
         print('%d mappings can not be generated due to missing dependencies:' % len(mappings),
               file=sys.stderr)
+        print(mappings)
         breakpoint()
         for m in mappings:
             print('- %s <-> %s:' %
@@ -1421,7 +1422,10 @@ class Mapping:
                 self.depends_on_ros2_messages.add(Message(pkg_name, msg_name))
     
     def __str__(self):
-        return f"Mapping({self.ros1_msg} <-> {self.ros2_msg})"#:\n\t1->2: {pprint.pformat(self.fields_1_to_2)},\n\t2->1: {pprint.pformat(self.fields_2_to_1)}"
+        return f"Mapping({self.ros1_msg} <-> {self.ros2_msg}):\n\t1->2: {pprint.pformat(self.fields_1_to_2)},\n\t2->1: {pprint.pformat(self.fields_2_to_1)}"
+
+    def __repr__(self):
+        return f"Mapping({self.ros1_msg} <-> {self.ros2_msg}):\n\t1->2: {pprint.pformat(self.fields_1_to_2)},\n\t2->1: {pprint.pformat(self.fields_2_to_1)}"
 
 def camel_case_to_lower_case_underscore(value):
     # insert an underscore before any upper case letter
